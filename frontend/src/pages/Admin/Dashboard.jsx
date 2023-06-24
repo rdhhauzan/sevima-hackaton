@@ -17,6 +17,7 @@ function AdminDashboard() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log(Quiz);
     fetchQuiz();
     fetchUsers();
     avgScore();
@@ -158,44 +159,51 @@ function AdminDashboard() {
           <div className="rec-quiz mt-3">
             <h2>Recent Quiz</h2>
             <div className="row">
-              {Quiz.slice(0, 6).map((data, i) => {
-                return (
-                  <div className="col-md-4 my-2" key={i}>
-                    <div class="card">
-                      <div class="card-body">
-                        <h5 class="card-title">{data.name}</h5>
-                        <div className="card-text mb-3">
-                          <p class="">{data.description}</p>
-                          <AiOutlineClockCircle /> {data.duration} Minutes{" "}
-                          <BsFillPersonFill /> {data.User.name}
+              {Array.isArray(Quiz) ? (
+                <>
+                  {Quiz.slice(0, 6).map((data, i) => {
+                    return (
+                      <div className="col-md-4 my-2" key={i}>
+                        <div className="card">
+                          <div className="card-body">
+                            <h5 className="card-title">{data.name}</h5>
+                            <div className="card-text mb-3">
+                              <p className="">{data.description}</p>
+                              <AiOutlineClockCircle /> {
+                                data.duration
+                              } Minutes <BsFillPersonFill /> {data.User.name}
+                            </div>
+                            <button
+                              href="#"
+                              className="btn btn-primary mx-2"
+                              onClick={() =>
+                                navigate("/admin/quiz/detail", { state: data })
+                              }
+                            >
+                              Detail
+                            </button>
+                            <button
+                              type="button"
+                              className="btn btn-warning mx-2"
+                              onClick={() => handleEditClick(data)}
+                            >
+                              Update
+                            </button>
+                            <button
+                              className="btn btn-danger mx-2"
+                              onClick={() => handleDelete(data.id)}
+                            >
+                              Delete
+                            </button>
+                          </div>
                         </div>
-                        <button
-                          href="#"
-                          class="btn btn-primary mx-2"
-                          onClick={() =>
-                            navigate("/admin/quiz/detail", { state: data })
-                          }
-                        >
-                          Detail
-                        </button>
-                        <button
-                          type="button"
-                          class="btn btn-warning mx-2"
-                          onClick={() => handleEditClick(data)}
-                        >
-                          Update
-                        </button>
-                        <button
-                          class="btn btn-danger mx-2"
-                          onClick={() => handleDelete(data.id)}
-                        >
-                          Delete
-                        </button>
                       </div>
-                    </div>
-                  </div>
-                );
-              })}
+                    );
+                  })}
+                </>
+              ) : (
+                ""
+              )}
             </div>
           </div>
         </div>
