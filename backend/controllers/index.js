@@ -8,6 +8,7 @@ const {
 } = require("../models");
 const { comparePassword } = require("../helpers/bcrypt");
 const { createToken } = require("../helpers/jwt");
+const { Op, literal } = require("sequelize");
 
 class Controller {
   static async RegisterUser(req, res) {
@@ -59,6 +60,7 @@ class Controller {
         id: findUser.id,
         email: findUser.email,
         role: findUser.role,
+        name: findUser.name,
       });
     } catch (error) {
       if (error.name == "LOGIN_ERROR") {
@@ -428,8 +430,39 @@ class Controller {
 
   static async showQuiz(req, res) {
     try {
-      // Find all quizzes
-      const quizzes = await Quiz.findAll();
+      // Find all quizzes and include the associated user with specific attributes
+      const quizzes = await Quiz.findAll({
+        include: [
+          {
+            model: User,
+            as: "User",
+            attributes: ["id", "name"],
+          },
+          {
+            model: QuizQuestion,
+            as: "QuizQuestions",
+            attributes: [],
+            include: [
+              {
+                model: Quiz,
+                as: "Quiz",
+                attributes: [],
+              },
+            ],
+          },
+        ],
+        attributes: {
+          exclude: ["creatorId"],
+          include: [
+            [
+              sequelize.fn("count", sequelize.col("QuizQuestions.Quiz.id")),
+              "totalQuestions",
+            ],
+          ],
+        },
+        group: ["Quiz.id", "User.id", "QuizQuestions.Quiz.id"],
+      });
+
       res.json(quizzes);
     } catch (error) {
       console.error(error);
@@ -482,7 +515,7 @@ class Controller {
         ],
       }));
 
-      res.json(questions);
+      res.json({ questions: questions, duration: quiz.duration });
     } catch (error) {
       console.error(error);
       res.status(500).json({ message: "Internal Server Error" });
@@ -541,12 +574,10 @@ class Controller {
 
   static async userProfile(req, res) {
     try {
-      const userId = req.params.userId;
+      const userId = req.user.id;
 
       // Retrieve the user's profile
-      const user = await User.findByPk(userId, {
-        attributes: ["id", "name", "profile"],
-      });
+      const user = await User.findByPk(userId);
       if (!user) {
         return res.status(404).json({ error: "User not found" });
       }
@@ -557,13 +588,14 @@ class Controller {
         include: [
           {
             model: Quiz,
-            attributes: ["name"],
+            attributes: ["name", "id"],
           },
         ],
       });
 
       const formattedResults = quizResults.map((result) => ({
         quizName: result.Quiz.name,
+        quizId: result.Quiz.id,
         score: result.score,
       }));
 

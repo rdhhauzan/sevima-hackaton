@@ -29,6 +29,7 @@ function LoginPage() {
             localStorage.setItem("email", res.data.email);
             localStorage.setItem("id", res.data.id);
             localStorage.setItem("role", res.data.role);
+            localStorage.setItem("name", res.data.name);
 
             if (res.data.role == 0) {
               navigate("/admin/dashboard");

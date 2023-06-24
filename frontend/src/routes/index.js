@@ -7,6 +7,9 @@ import EditQuiz from "../pages/Admin/EditQuiz";
 import DetailQuiz from "../pages/Admin/DetailQuiz";
 import AddQuiz from "../pages/Admin/AddQuiz";
 import ShowQuiz from "../pages/Admin/ShowQuiz";
+import UserDashboard from "../pages/User/Dashboard";
+import QuizPage from "../pages/User/QuizPage";
+
 
 const router = createBrowserRouter([
   {
@@ -36,6 +39,14 @@ const router = createBrowserRouter([
   {
     path: "/admin/quizzes",
     element: <ShowQuiz />,
+  },
+  {
+    path: "/dashboard",
+    element: <UserDashboard />,
+  },
+  {
+    path: "/quiz/:id",
+    element: <QuizPage />,
   },
 ]);
 
