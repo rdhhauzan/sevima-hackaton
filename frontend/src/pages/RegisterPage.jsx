@@ -5,13 +5,14 @@ import { useFormik, useField, Form } from "formik";
 import * as Yup from "yup";
 import { redirect, useNavigate, Link } from "react-router-dom";
 
-function LoginPage() {
+function RegisterPage() {
   const navigate = useNavigate();
   const Form = () => {
     const formik = useFormik({
       initialValues: {
         email: "",
         password: "",
+        name: "",
       },
       validationSchema: Yup.object({
         email: Yup.string()
@@ -20,24 +21,23 @@ function LoginPage() {
         password: Yup.string()
           .required("Password are required!")
           .min(7, "Password Minimum 7 Character"),
+        name: Yup.string().required("Name are required!"),
       }),
       onSubmit: async (values) => {
+        values["role"] = 1;
         apiCaller
-          .post("/login", values)
+          .post("/register", values)
           .then((res) => {
-            localStorage.setItem("access_token", res.data.access_token);
-            localStorage.setItem("email", res.data.email);
-            localStorage.setItem("id", res.data.id);
-            localStorage.setItem("role", res.data.role);
-
-            if (res.data.role == 0) {
-              navigate("/admin/dashboard");
-            } else {
-              navigate("/dashboard");
-            }
+            console.log(res);
+            Swal.fire(
+              "Success",
+              "Register Success, Please Login",
+              "success"
+            ).then(() => navigate("/"));
           })
           .catch((err) => {
-            Swal.fire("Failed", err.response.data.msg, "error");
+            console.log(err);
+            Swal.fire("Failed", err.response.data.errors[0].message, "error");
           });
       },
     });
@@ -45,6 +45,24 @@ function LoginPage() {
     return (
       <>
         <form onSubmit={formik.handleSubmit}>
+          <div className="form-outline mb-4">
+            <label class="form-label" for="name">
+              Name
+            </label>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Enter your name"
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.name}
+              id="name"
+            />
+
+            {formik.touched.name && formik.errors.name ? (
+              <div className="text-danger">{formik.errors.name}</div>
+            ) : null}
+          </div>
           <div className="form-outline mb-4">
             <label class="form-label" for="email">
               Email
@@ -86,14 +104,14 @@ function LoginPage() {
           </button>
         </form>
         <Link
-          to={`/register`}
+          to={`/`}
           style={{
             borderRadius: 15,
             paddingRight: 10,
             textDecoration: "none",
           }}
         >
-          Dont have account? Register here
+          Already have account? Login here
         </Link>
       </>
     );
@@ -110,4 +128,4 @@ function LoginPage() {
   );
 }
 
-export default LoginPage;
+export default RegisterPage;
