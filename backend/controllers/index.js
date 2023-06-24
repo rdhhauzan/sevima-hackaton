@@ -471,7 +471,7 @@ class Controller {
       const score = (correctAnswers / totalQuestions) * maxScore;
 
       // Save the quiz result
-      const userId = req.user.id; // Assuming you have implemented user authentication and obtained the user ID
+      const userId = req.user.id; // obtained the user ID
       const quizResult = await QuizResult.create({
         userId,
         quizId,
@@ -479,6 +479,48 @@ class Controller {
       });
 
       res.status(201).json({ score: quizResult.score });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "An error occurred" });
+    }
+  }
+
+  static async userProfile(req, res) {
+    try {
+      const userId = req.params.userId;
+
+      // Retrieve the user's profile
+      const user = await User.findByPk(userId, {
+        attributes: ["id", "name", "profile"],
+      });
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      // Retrieve the user's quiz results
+      const quizResults = await QuizResult.findAll({
+        where: { userId },
+        include: [
+          {
+            model: Quiz,
+            attributes: ["name"],
+          },
+        ],
+      });
+
+      const formattedResults = quizResults.map((result) => ({
+        quizName: result.Quiz.name,
+        score: result.score,
+      }));
+
+      const userProfile = {
+        id: user.id,
+        name: user.name,
+        profile: user.profile,
+        quizResults: formattedResults,
+      };
+
+      res.status(200).json({ userProfile });
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "An error occurred" });

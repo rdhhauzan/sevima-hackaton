@@ -64,6 +64,7 @@ app.get("/quizzes", Controller.showQuiz);
 app.get("/quizzes/:id", Controller.showSpecificQuiz);
 app.get("/quizzes/:id/questions", Controller.getQuestionBySpecificQuiz);
 app.post("/quizzes/:quizId/answers", Controller.calculateTheScore);
+app.post("/users/:userId/profile", Controller.userProfile);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
