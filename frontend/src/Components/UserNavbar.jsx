@@ -32,27 +32,9 @@ function UserNavbar() {
                 className="nav-link"
                 activeClassName="active"
                 exact
-                to="/admin/dashboard"
+                to="/dashboard"
               >
                 Home
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink
-                className="nav-link"
-                activeClassName="active"
-                to="/admin/quizzes"
-              >
-                Show All Quizzes
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink
-                className="nav-link"
-                activeClassName="active"
-                to="/admin/quiz/add"
-              >
-                Add Quiz
               </NavLink>
             </li>
             <li className="nav-item">

@@ -155,21 +155,40 @@ function UserDashboard() {
                               {data.answered ? (
                                 <>
                                   <button
-                                    className="btn btn-danger mt-3"
+                                    className="btn btn-danger m-3"
                                     disabled
                                   >
                                     Score: {data.score}
+                                  </button>
+                                  <button
+                                    className="btn btn-danger m-3"
+                                    disabled
+                                  >
+                                    {data.score >= 0 && data.score <= 30 && "D"}
+                                    {data.score >= 31 &&
+                                      data.score <= 50 &&
+                                      "C"}
+                                    {data.score >= 51 &&
+                                      data.score <= 80 &&
+                                      "B"}
+                                    {data.score >= 81 &&
+                                      data.score <= 100 &&
+                                      "A"}
                                   </button>
                                 </>
                               ) : (
                                 <>
                                   <button
                                     className={`btn mt-3 ${
-                                      data.totalQuestions < 1 ? "disabled btn-warning" : "btn-primary"
+                                      data.totalQuestions < 1
+                                        ? "disabled btn-warning"
+                                        : "btn-primary"
                                     }`}
                                     onClick={() => goToQuiz(data.id)}
                                   >
-                                    {data.totalQuestions < 1 ? 'Not Enough Questions' : 'Start Quiz'}
+                                    {data.totalQuestions < 1
+                                      ? "Not Enough Questions"
+                                      : "Start Quiz"}
                                   </button>
                                 </>
                               )}
