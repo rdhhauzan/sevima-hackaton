@@ -41,7 +41,7 @@ function DetailQuiz() {
   }
 
   async function deleteQuiz(data) {
-    const confirmBooking = await Swal.fire({
+    const confirmDelete = await Swal.fire({
       title: "Are you sure?",
       icon: "warning",
       text: "You cannot undo this operation",
@@ -51,7 +51,7 @@ function DetailQuiz() {
       cancelButtonColor: "red",
     });
 
-    if (confirmBooking.isConfirmed) {
+    if (confirmDelete.isConfirmed) {
       await apiCaller
         .delete(`/admin/quizzes/${state.id}/questions/${data.id}`, {
           headers: {

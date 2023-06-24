@@ -4,6 +4,7 @@ const {
   QuizAnswer,
   QuizQuestion,
   QuizResult,
+  sequelize,
 } = require("../models");
 const { comparePassword } = require("../helpers/bcrypt");
 const { createToken } = require("../helpers/jwt");
@@ -77,12 +78,37 @@ class Controller {
   static async adminShowQuiz(req, res) {
     try {
       const quizzes = await Quiz.findAll({
-        include: {
-          model: User,
-          as: "User",
-          attributes: ["id", "name"], // Include only specific attributes from the User model
+        include: [
+          {
+            model: User,
+            as: "User",
+            attributes: ["id", "name"],
+          },
+          {
+            model: QuizQuestion,
+            as: "QuizQuestions",
+            attributes: [],
+            include: [
+              {
+                model: Quiz,
+                as: "Quiz",
+                attributes: [],
+              },
+            ],
+          },
+        ],
+        attributes: {
+          exclude: ["creatorId"],
+          include: [
+            [
+              sequelize.fn("count", sequelize.col("QuizQuestions.Quiz.id")),
+              "totalQuestions",
+            ],
+          ],
         },
+        group: ["Quiz.id", "User.id", "QuizQuestions.Quiz.id"],
       });
+
       res.json(quizzes);
     } catch (error) {
       console.error(error);
