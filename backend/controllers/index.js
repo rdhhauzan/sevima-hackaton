@@ -235,6 +235,71 @@ class Controller {
       res.status(500).json({ message: "Internal Server Error" });
     }
   }
+
+  static async getSpecificQuestioninSpecificQuiz(req, res) {
+    try {
+      const { quizId, questionId } = req.params;
+
+      // Find the question by ID and associated quiz
+      const question = await QuizQuestion.findOne({
+        where: { id: questionId, quizId },
+      });
+
+      if (!question) {
+        return res.status(404).json({ message: "Question not found" });
+      }
+
+      res.json(question);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+
+  static async editSpecificQuestioninSpecificQuiz(req, res) {
+    try {
+      const { quizId, questionId } = req.params;
+      const {
+        question,
+        correct_answer,
+        choice_1,
+        choice_2,
+        choice_3,
+        choice_4,
+      } = req.body;
+
+      // Update the question details
+      const [numAffectedRows, affectedRows] = await QuizQuestion.update(
+        {
+          question,
+          correct_answer,
+          choice_1,
+          choice_2,
+          choice_3,
+          choice_4,
+        },
+        {
+          where: {
+            id: questionId,
+            quizId,
+          },
+          returning: true, // Return the updated question
+        }
+      );
+
+      if (numAffectedRows === 0) {
+        return res.status(404).json({ message: "Question not found" });
+      }
+
+      res.json({
+        message: "Question updated successfully",
+        question: affectedRows[0],
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
 }
 
 module.exports = Controller;

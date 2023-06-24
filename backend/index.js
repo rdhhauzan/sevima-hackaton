@@ -27,6 +27,8 @@ app.delete("/admin/quizzes/:id", adminAuthorization, Controller.deleteQuiz);
 
 app.get("/admin/quizzes/:quizId/questions", adminAuthorization, Controller.getQuestionForSpecificQuiz);
 app.post("/admin/quizzes/:quizId/questions", adminAuthorization, Controller.addQuestionForSpecificQuiz);
+app.get("/admin/quizzes/:quizId/questions/:questionId", adminAuthorization, Controller.getSpecificQuestioninSpecificQuiz);
+app.put("/admin/quizzes/:quizId/questions/:questionId", adminAuthorization, Controller.editSpecificQuestioninSpecificQuiz);
 
 
 app.listen(port, () => {
