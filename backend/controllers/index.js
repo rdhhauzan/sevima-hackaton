@@ -76,7 +76,13 @@ class Controller {
   // ! Start Admin Section
   static async adminShowQuiz(req, res) {
     try {
-      const quizzes = await Quiz.findAll();
+      const quizzes = await Quiz.findAll({
+        include: {
+          model: User,
+          as: "User",
+          attributes: ["id", "name"], // Include only specific attributes from the User model
+        },
+      });
       res.json(quizzes);
     } catch (error) {
       console.error(error);
