@@ -19,13 +19,69 @@ module.exports = (sequelize, DataTypes) => {
   }
   QuizQuestion.init(
     {
-      quizId: DataTypes.INTEGER,
-      question: DataTypes.STRING,
-      correct_answer: DataTypes.STRING,
-      choice_1: DataTypes.STRING,
-      choice_2: DataTypes.STRING,
-      choice_3: DataTypes.STRING,
-      choice_4: DataTypes.STRING,
+      quizId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+          isInt: {
+            msg: "Quiz ID must be an integer",
+          },
+        },
+      },
+      question: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            msg: "Question is required",
+          },
+        },
+      },
+      correct_answer: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            msg: "Correct answer is required",
+          },
+        },
+      },
+      choice_1: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            msg: "Choice 1 is required",
+          },
+        },
+      },
+      choice_2: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            msg: "Choice 2 is required",
+          },
+        },
+      },
+      choice_3: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            msg: "Choice 3 is required",
+          },
+        },
+      },
+      choice_4: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            msg: "Choice 4 is required",
+          },
+        },
+      },
     },
     {
       sequelize,
