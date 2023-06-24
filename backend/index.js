@@ -29,7 +29,10 @@ app.get("/admin/quizzes/:quizId/questions", adminAuthorization, Controller.getQu
 app.post("/admin/quizzes/:quizId/questions", adminAuthorization, Controller.addQuestionForSpecificQuiz);
 app.get("/admin/quizzes/:quizId/questions/:questionId", adminAuthorization, Controller.getSpecificQuestioninSpecificQuiz);
 app.put("/admin/quizzes/:quizId/questions/:questionId", adminAuthorization, Controller.editSpecificQuestioninSpecificQuiz);
+app.delete("/admin/quizzes/:quizId/questions/:questionId", adminAuthorization, Controller.deleteSpecificQuestioninSpecificQuiz);
 
+app.get("/admin/users", adminAuthorization, Controller.adminGetAllUsers);
+app.get("/admin/users/:id", adminAuthorization, Controller.getSpecificUser);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

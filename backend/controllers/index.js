@@ -300,6 +300,77 @@ class Controller {
       res.status(500).json({ message: "Internal Server Error" });
     }
   }
+
+  static async deleteSpecificQuestioninSpecificQuiz(req, res) {
+    try {
+      const { quizId, questionId } = req.params;
+
+      // Delete the question
+      const numAffectedRows = await QuizQuestion.destroy({
+        where: { id: questionId, quizId },
+      });
+
+      if (numAffectedRows === 0) {
+        return res.status(404).json({ message: "Question not found" });
+      }
+
+      res.json({ message: "Question deleted successfully" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+
+  static async adminGetAllUsers(req, res) {
+    try {
+      // Find all users
+      const users = await User.findAll({
+        attributes: { exclude: ["password"] },
+      });
+
+      res.json(users);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+
+  static async getSpecificUser(req, res) {
+    try {
+      const { id } = req.params;
+
+      // Find the user by id
+      const user = await User.findByPk(id);
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      // Find the user's quiz results and include the Quiz model to retrieve the quiz details
+      const quizResults = await QuizResult.findAll({
+        where: { userId: id },
+        include: {
+          model: Quiz,
+          attributes: ["name"],
+        },
+        attributes: ["score"],
+      });
+
+      const userDetails = {
+        id: user.id,
+        name: user.name,
+        scores: quizResults.map((result) => ({
+          score: result.score,
+          quizName: result.Quiz.name,
+        })),
+      };
+
+      res.json(userDetails);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
 }
 
 module.exports = Controller;
