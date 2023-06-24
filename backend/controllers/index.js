@@ -371,6 +371,119 @@ class Controller {
       res.status(500).json({ message: "Internal Server Error" });
     }
   }
+
+  static async showQuiz(req, res) {
+    try {
+      // Find all quizzes
+      const quizzes = await Quiz.findAll();
+      res.json(quizzes);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+
+  static async showSpecificQuiz(req, res) {
+    try {
+      const { id } = req.params;
+
+      // Find the quiz by id
+      const quiz = await Quiz.findByPk(id);
+
+      if (!quiz) {
+        return res.status(404).json({ message: "Quiz not found" });
+      }
+
+      res.json(quiz);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+
+  static async getQuestionBySpecificQuiz(req, res) {
+    try {
+      const { id } = req.params;
+
+      // Find the quiz by id
+      const quiz = await Quiz.findByPk(id, {
+        include: {
+          model: QuizQuestion,
+        },
+        order: [[QuizQuestion, "id", "ASC"]], // Order the questions by their IDs
+      });
+
+      if (!quiz) {
+        return res.status(404).json({ message: "Quiz not found" });
+      }
+
+      const questions = quiz.QuizQuestions.map((question) => ({
+        id: question.id,
+        question: question.question,
+        choices: [
+          question.choice_1,
+          question.choice_2,
+          question.choice_3,
+          question.choice_4,
+        ],
+      }));
+
+      res.json(questions);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+
+  static async calculateTheScore(req, res) {
+    try {
+      const quizId = req.params.quizId;
+      const answers = req.body.answers; // An array of objects containing question IDs and user answers
+
+      // Retrieve the quiz and its questions
+      const quiz = await Quiz.findByPk(quizId, { include: QuizQuestion });
+      if (!quiz) {
+        return res.status(404).json({ error: "Quiz not found" });
+      }
+
+      // Validate the provided answers
+      if (!Array.isArray(answers) || answers.length === 0) {
+        return res.status(400).json({ error: "Invalid answers provided" });
+      }
+
+      // Calculate the score
+      const maxScore = 100; // Maximum score for the quiz
+      const totalQuestions = quiz.QuizQuestions.length; // Total number of questions in the quiz
+      let correctAnswers = 0;
+
+      for (const answer of answers) {
+        const question = quiz.QuizQuestions.find(
+          (q) => q.id == answer.questionId
+        );
+        if (!question) {
+          continue; // Skip if the question is not found in the quiz
+        }
+        if (question.correct_answer == answer.userAnswer) {
+          correctAnswers++;
+        }
+      }
+
+      const score = (correctAnswers / totalQuestions) * maxScore;
+
+      // Save the quiz result
+      const userId = req.user.id; // Assuming you have implemented user authentication and obtained the user ID
+      const quizResult = await QuizResult.create({
+        userId,
+        quizId,
+        score,
+      });
+
+      res.status(201).json({ score: quizResult.score });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "An error occurred" });
+    }
+  }
 }
 
 module.exports = Controller;

@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       quizId: DataTypes.INTEGER,
       question: DataTypes.STRING,
-      correct_answer: DataTypes.INTEGER,
+      correct_answer: DataTypes.STRING,
       choice_1: DataTypes.STRING,
       choice_2: DataTypes.STRING,
       choice_3: DataTypes.STRING,

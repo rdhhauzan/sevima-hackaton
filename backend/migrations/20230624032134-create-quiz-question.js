@@ -22,7 +22,7 @@ module.exports = {
         type: Sequelize.STRING,
       },
       correct_answer: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
       },
       choice_1: {
         type: Sequelize.STRING,
