@@ -19,9 +19,10 @@ app.post("/login", Controller.loginUser);
 
 app.use(authentication);
 
-app.get("/admin", adminAuthorization, (req, res) => {
-  res.send("Hello Admin!");
-});
+app.get("/admin/quizzes", adminAuthorization, Controller.adminShowQuiz);
+app.post("/admin/quizzes", adminAuthorization, Controller.adminAddQuiz);
+app.get("/admin/quizzes/:id", adminAuthorization, Controller.adminShowSpecificQuiz);
+app.put("/admin/quizzes/:id", adminAuthorization, Controller.editQuiz);
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);

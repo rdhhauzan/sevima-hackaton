@@ -49,7 +49,7 @@ class Controller {
         id: findUser.id,
         email: findUser.email,
         name: findUser.name,
-        role: findUser.role
+        role: findUser.role,
       };
 
       const access_token = createToken(payload);
@@ -70,6 +70,85 @@ class Controller {
         });
       }
       console.log(error);
+    }
+  }
+
+  // ! Start Admin Section
+  static async adminShowQuiz(req, res) {
+    try {
+      const quizzes = await Quiz.findAll();
+      res.json(quizzes);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+
+  static async adminAddQuiz(req, res) {
+    try {
+      const { name, description, duration } = req.body;
+
+      // Create the quiz
+      const quiz = await Quiz.create({
+        name,
+        description,
+        duration,
+        creatorId: req.user.id,
+      });
+
+      res.status(201).json(quiz);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+
+  static async adminShowSpecificQuiz(req, res) {
+    try {
+      const { id } = req.params;
+
+      // Find the quiz by ID
+      const quiz = await Quiz.findByPk(id);
+
+      if (!quiz) {
+        return res.status(404).json({ message: "Quiz not found" });
+      }
+
+      res.json(quiz);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+
+  static async editQuiz(req, res) {
+    try {
+      const { id } = req.params;
+      const { name, description, duration } = req.body;
+
+      // Update the quiz details
+      const [updatedRows] = await Quiz.update(
+        {
+          name,
+          description,
+          duration,
+        },
+        {
+          where: { id },
+        }
+      );
+
+      if (updatedRows === 0) {
+        return res.status(404).json({ message: "Quiz not found" });
+      }
+
+      // Fetch the updated quiz
+      const updatedQuiz = await Quiz.findByPk(id);
+
+      res.json(updatedQuiz);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal Server Error" });
     }
   }
 }
