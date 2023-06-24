@@ -151,6 +151,90 @@ class Controller {
       res.status(500).json({ message: "Internal Server Error" });
     }
   }
+
+  static async deleteQuiz(req, res) {
+    try {
+      const { id } = req.params;
+
+      // Find the quiz by ID
+      const quiz = await Quiz.findByPk(id);
+
+      if (!quiz) {
+        return res.status(404).json({ message: "Quiz not found" });
+      }
+
+      // Delete the quiz
+      await quiz.destroy();
+
+      res.json({ message: "Quiz deleted successfully" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+
+  static async getQuestionForSpecificQuiz(req, res) {
+    try {
+      const { quizId } = req.params;
+
+      // Find the quiz by ID and include its associated questions
+      const quiz = await Quiz.findByPk(quizId, {
+        include: {
+          model: QuizQuestion,
+          as: "QuizQuestions",
+        },
+      });
+
+      if (!quiz) {
+        return res.status(404).json({ message: "Quiz not found" });
+      }
+
+      res.json(quiz);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+
+  static async addQuestionForSpecificQuiz(req, res) {
+    try {
+      const { quizId } = req.params;
+      const {
+        question,
+        correct_answer,
+        choice_1,
+        choice_2,
+        choice_3,
+        choice_4,
+      } = req.body;
+
+      // Find the quiz by ID
+      const quiz = await Quiz.findByPk(quizId);
+
+      if (!quiz) {
+        return res.status(404).json({ message: "Quiz not found" });
+      }
+
+      // Create the new question
+      const newQuestion = await QuizQuestion.create({
+        quizId,
+        question,
+        correct_answer,
+        choice_1,
+        choice_2,
+        choice_3,
+        choice_4,
+      });
+
+      res.status(201).json({
+        message: "Question added successfully",
+        question: newQuestion,
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
 }
 
 module.exports = Controller;

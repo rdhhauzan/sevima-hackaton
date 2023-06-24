@@ -23,6 +23,11 @@ app.get("/admin/quizzes", adminAuthorization, Controller.adminShowQuiz);
 app.post("/admin/quizzes", adminAuthorization, Controller.adminAddQuiz);
 app.get("/admin/quizzes/:id", adminAuthorization, Controller.adminShowSpecificQuiz);
 app.put("/admin/quizzes/:id", adminAuthorization, Controller.editQuiz);
+app.delete("/admin/quizzes/:id", adminAuthorization, Controller.deleteQuiz);
+
+app.get("/admin/quizzes/:quizId/questions", adminAuthorization, Controller.getQuestionForSpecificQuiz);
+app.post("/admin/quizzes/:quizId/questions", adminAuthorization, Controller.addQuestionForSpecificQuiz);
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
