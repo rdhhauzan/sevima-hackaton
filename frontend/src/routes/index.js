@@ -26,6 +26,7 @@ const router = createBrowserRouter([
       ) {
         return redirect("/dashboard");
       }
+      return null;
     },
   },
   {
@@ -43,6 +44,7 @@ const router = createBrowserRouter([
       ) {
         return redirect("/dashboard");
       }
+      return null;
     },
   },
   {
@@ -57,6 +59,7 @@ const router = createBrowserRouter([
       } else if (!localStorage.getItem("access_token")) {
         return redirect("/");
       }
+      return null;
     },
   },
   {
@@ -71,6 +74,7 @@ const router = createBrowserRouter([
       } else if (!localStorage.getItem("access_token")) {
         return redirect("/");
       }
+      return null;
     },
   },
   {
@@ -85,6 +89,7 @@ const router = createBrowserRouter([
       } else if (!localStorage.getItem("access_token")) {
         return redirect("/");
       }
+      return null;
     },
   },
   {
@@ -99,6 +104,7 @@ const router = createBrowserRouter([
       } else if (!localStorage.getItem("access_token")) {
         return redirect("/");
       }
+      return null;
     },
   },
   {
@@ -113,6 +119,7 @@ const router = createBrowserRouter([
       } else if (!localStorage.getItem("access_token")) {
         return redirect("/");
       }
+      return null;
     },
   },
   {
