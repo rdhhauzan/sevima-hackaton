@@ -29,6 +29,7 @@ const authentication = async (req, res, next) => {
       id: validateToken.id,
       name: validateToken.name,
       email: validateToken.email,
+      role: validateToken.role,
     };
     next();
   } catch (error) {
