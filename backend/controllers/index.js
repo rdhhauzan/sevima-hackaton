@@ -404,6 +404,28 @@ class Controller {
     }
   }
 
+  static async getAllQuizzesAverageScore(req, res) {
+    try {
+      const averageScore = await QuizResult.findOne({
+        attributes: [
+          [
+            sequelize.fn(
+              "ROUND",
+              sequelize.fn("AVG", sequelize.col("score")),
+              1
+            ),
+            "averageScore",
+          ],
+        ],
+      });
+
+      res.json({ averageScore: averageScore.dataValues.averageScore });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+
   static async showQuiz(req, res) {
     try {
       // Find all quizzes

@@ -58,6 +58,11 @@ app.delete(
 
 app.get("/admin/users", adminAuthorization, Controller.adminGetAllUsers);
 app.get("/admin/users/:id", adminAuthorization, Controller.getSpecificUser);
+app.get(
+  "/admin/avg/quizzes",
+  adminAuthorization,
+  Controller.getAllQuizzesAverageScore
+);
 // ! End admin routes
 
 app.get("/quizzes", Controller.showQuiz);

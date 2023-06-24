@@ -11,11 +11,15 @@ document.body.style = "background: #F5F6F8";
 function AdminDashboard() {
   let [Quiz, setQuiz] = useState({});
   const [selectedQuiz, setSelectedQuiz] = useState(null);
+  const [Users, setUsers] = useState({});
+  const [score, setScore] = useState(0);
   let [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchQuiz();
+    fetchUsers();
+    avgScore();
   }, []);
 
   function fetchQuiz() {
@@ -27,6 +31,40 @@ function AdminDashboard() {
       })
       .then((res) => {
         setQuiz(res.data);
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => setIsLoading(false));
+  }
+
+  function fetchUsers() {
+    apiCaller
+      .get("/admin/users", {
+        headers: {
+          access_token: localStorage.getItem("access_token"),
+        },
+      })
+      .then((res) => {
+        setUsers(res.data);
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => setIsLoading(false));
+  }
+
+  function avgScore() {
+    apiCaller
+      .get("/admin/avg/quizzes", {
+        headers: {
+          access_token: localStorage.getItem("access_token"),
+        },
+      })
+      .then((res) => {
+        setScore(res.data.averageScore);
         console.log(res);
       })
       .catch((err) => {
@@ -91,7 +129,9 @@ function AdminDashboard() {
               <div className="card">
                 <div className="card-body">
                   <h6>Total Quizzes</h6>
-                  <p className="card-text">10</p>
+                  <p className="card-text">
+                    {Quiz.length} {Quiz.length < 2 ? "Quiz" : "Quizzes"}
+                  </p>
                 </div>
               </div>
             </div>
@@ -99,15 +139,9 @@ function AdminDashboard() {
               <div className="card">
                 <div className="card-body">
                   <h6>Total Users</h6>
-                  <p className="card-text">10</p>
-                </div>
-              </div>
-            </div>
-            <div className="col">
-              <div className="card">
-                <div className="card-body">
-                  <h6>Total Score</h6>
-                  <p className="card-text">10</p>
+                  <p className="card-text">
+                    {Users.length} {Users.length < 2 ? "User" : "Users"}
+                  </p>
                 </div>
               </div>
             </div>
@@ -115,7 +149,7 @@ function AdminDashboard() {
               <div className="card">
                 <div className="card-body">
                   <h6>Average Score</h6>
-                  <p className="card-text">10</p>
+                  <p className="card-text">{score}</p>
                 </div>
               </div>
             </div>

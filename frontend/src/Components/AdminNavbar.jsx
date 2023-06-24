@@ -1,53 +1,59 @@
-function AdminNavbar () {
-    return (
-      <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">
-            Navbar
-          </a>
-          <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNav"
-            aria-controls="navbarNav"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">
-                  Home
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  Features
-                </a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  Pricing
-                </a>
-              </li>
-              <li class="nav-item">
-                <a
-                  class="nav-link disabled"
-                  href="#"
-                  tabindex="-1"
-                  aria-disabled="true"
-                >
-                  Disabled
-                </a>
-              </li>
-            </ul>
-          </div>
+import { Link, useLocation, NavLink } from "react-router-dom";
+
+function AdminNavbar() {
+  const location = useLocation();
+  return (
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+          Navbar
+        </a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+          aria-controls="navbarNav"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li className="nav-item">
+              <NavLink
+                className="nav-link"
+                activeClassName="active"
+                exact
+                to="/admin/dashboard"
+              >
+                Home
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink
+                className="nav-link"
+                activeClassName="active"
+                to="/admin/quizzes"
+              >
+                Show All Quizzes
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink
+                className="nav-link"
+                activeClassName="active"
+                to="/admin/quiz/add"
+              >
+                Add Quiz
+              </NavLink>
+            </li>
+          </ul>
         </div>
-      </nav>
-    );
+      </div>
+    </nav>
+  );
 }
 
-export default AdminNavbar
+export default AdminNavbar;
