@@ -33,10 +33,10 @@ AI and automation are implemented when calculating the score after the user comp
    cd backend && npm install
    ```
 
-3. Go to frontend folder and Install dependencies and copy .env
+3. Go to frontend folder and Install dependencies
 
    ```sh
-   cd frontend && npm install && cp .env.example .env
+   cd frontend && npm install
    ```
 
 4. Restore Database using hackaton.sql (POSTGRESQL)
